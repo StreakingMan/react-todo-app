@@ -1,21 +1,36 @@
 {
-  "name": "react-todo-wallpaper",
-  "private": true,
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10",
-    "@vitejs/plugin-react": "^1.0.7",
-    "typescript": "^4.5.4",
-    "vite": "^2.8.0"
-  }
+    "name": "react-todo-wallpaper",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "prepare": "husky install",
+        "release:first": "standard-version -- --first-release",
+        "release": "standard-version"
+    },
+    "dependencies": {
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^16.2.1",
+        "@commitlint/config-conventional": "^16.2.1",
+        "@types/react": "^17.0.33",
+        "@types/react-dom": "^17.0.10",
+        "@typescript-eslint/eslint-plugin": "^5.13.0",
+        "@typescript-eslint/parser": "^5.13.0",
+        "@vitejs/plugin-react": "^1.0.7",
+        "eslint": "^8.10.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.29.3",
+        "husky": "^7.0.4",
+        "lint-staged": "^12.3.5",
+        "prettier": "^2.5.1",
+        "standard-version": "^9.3.2",
+        "typescript": "^4.5.4",
+        "vite": "^2.8.0"
+    }
 }
