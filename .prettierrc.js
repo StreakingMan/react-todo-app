@@ -1,7 +1,7 @@
 /**
  * prettier config
  * @ref https://prettier.io/
- * @desc generated at 2022/3/8 00:39:14 by streakingman-cli@1.6.3
+ * @desc generated at 2022/4/7 00:00:28 by streakingman-cli@1.7.1
  */
 
 module.exports = {

@@ -1,7 +1,7 @@
 /**
  * eslint config
  * @ref http://eslint.cn/
- * @desc generated at 2022/3/8 00:39:15 by streakingman-cli@1.6.3
+ * @desc generated at 2022/4/7 00:00:28 by streakingman-cli@1.7.1
  */
 
 module.exports = {
