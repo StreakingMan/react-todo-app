@@ -1,17 +1,41 @@
 {
     "name": "react-todo-app",
+    "description": "A simple todo-list app.",
+    "author": {
+        "email": "z_max_y@163.com",
+        "name": "streakingman"
+    },
+    "build": {
+        "productName": "React Todo App",
+        "appId": "com.electron.streakingman.todo",
+        "directories": {
+            "output": "build"
+        },
+        "mac": {
+            "category": "your.app.category.type"
+        },
+        "win": {
+            "target": [
+                {
+                    "target": "nsis"
+                }
+            ]
+        }
+    },
     "private": true,
     "version": "0.0.0",
     "main": "main.js",
     "scripts": {
-        "electorn": "npm run build:electron && electron .",
         "dev": "vite",
         "build": "tsc && vite build",
         "build:electron": "tsc && cross-env ELECTRON=true vite build",
         "preview": "vite preview",
         "prepare": "husky install",
         "release:first": "standard-version -- --first-release",
-        "release": "standard-version"
+        "release": "standard-version",
+        "electorn:dev": "npm run build:electron && electron .",
+        "electron:pack": "electron-builder --dir",
+        "electron:dist": "electron-builder"
     },
     "dependencies": {
         "@emotion/react": "^11.8.1",
@@ -32,6 +56,7 @@
         "@vitejs/plugin-react": "^1.0.7",
         "cross-env": "^7.0.3",
         "electron": "^18.0.3",
+        "electron-builder": "^23.0.3",
         "eslint": "^8.12.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.0.0",
