@@ -3,13 +3,43 @@ import classnames from 'classnames';
 import style from './index.module.scss';
 import { KangarooProps } from './interface';
 import { gsap } from 'gsap';
-import { classSelector, idSelector } from '../../utils/gsap';
+import { classSelector, idSelector } from '../../../utils/gsap';
+import { throttle } from 'lodash';
 
-const Giraffe: FC<KangarooProps> = () => {
+const earTimeline = gsap.timeline({ repeat: -1, yoyo: true });
+export const waveEar = throttle(() => {
+    earTimeline.pause();
+    gsap.to(idSelector('ear_group'), {
+        rotate: -25,
+        transformOrigin: 'left center',
+        duration: 0.1,
+    });
+    gsap.to(idSelector('ear_group'), {
+        rotate: 0,
+        transformOrigin: 'left center',
+        delay: 0.1,
+        duration: 0.1,
+    });
+    gsap.to(idSelector('ear_group-2'), {
+        rotate: 25,
+        transformOrigin: 'right center',
+        duration: 0.1,
+    });
+    gsap.to(idSelector('ear_group-2'), {
+        rotate: 0,
+        transformOrigin: 'right center',
+        duration: 0.1,
+        delay: 0.1,
+        onComplete: () => {
+            earTimeline.restart();
+        },
+    });
+}, 200);
+
+const Giraffe: FC<KangarooProps> = ({ className, children }) => {
     useEffect(() => {
-        const timeline = gsap.timeline({ repeat: -1, yoyo: true });
-        timeline.add('begin');
-        timeline.to(
+        earTimeline.add('begin');
+        earTimeline.to(
             idSelector('ear_group'),
             {
                 rotate: -10,
@@ -18,7 +48,7 @@ const Giraffe: FC<KangarooProps> = () => {
             },
             'begin'
         );
-        timeline.to(
+        earTimeline.to(
             idSelector('ear_group-2'),
             {
                 rotate: 10,
@@ -31,7 +61,8 @@ const Giraffe: FC<KangarooProps> = () => {
     useEffect(() => {
         const eyeInner1 = document.getElementById('inner');
         const eyeInner2 = document.getElementById('inner-2');
-        if (!eyeInner1 || !eyeInner2) return;
+        const eyeOuter = document.getElementById('outer');
+        if (!eyeInner1 || !eyeInner2 || !eyeOuter) return;
         const { x: x1, y } = eyeInner1.getBoundingClientRect();
         const { x: x2 } = eyeInner2.getBoundingClientRect();
         const [eyeX, eyeY] = [(x1 + x2) / 2, y];
@@ -39,32 +70,51 @@ const Giraffe: FC<KangarooProps> = () => {
             window.innerWidth,
             window.innerHeight,
         ];
+        let transBase = eyeOuter.getBoundingClientRect().width / 2;
 
-        window.addEventListener('mousemove', ({ x, y }) => {
-            const base = 60;
-            const [transX, transY] = [
-                ((x - eyeX) / screenWidth) * base,
-                ((y - eyeY) / screenHeight) * base,
+        const handleResize = () => {
+            transBase = eyeOuter.getBoundingClientRect().width / 2;
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        const handleMousemove = ({ x, y }: MouseEvent) => {
+            let [transX, transY] = [
+                (((x - eyeX) * 3) / screenWidth) * transBase,
+                (((y - eyeY) * 3) / screenHeight) * transBase,
             ];
+            if (transX > transBase) transX = transBase;
+            if (transY > transBase) transY = transBase;
             gsap.to(idSelector('inner'), { x: transX, y: transY });
-            gsap.to(idSelector('eye_group'), {
-                x: transX / 10,
-                y: transY / 10,
-            });
             gsap.to(idSelector('inner-2'), { x: transX, y: transY });
-            gsap.to(idSelector('eye_group-2'), {
-                x: transX / 10,
-                y: transY / 10,
+            gsap.to(idSelector('eye_group'), {
+                x: transX / 6,
+                y: transY / 6,
             });
-        });
+            gsap.to(idSelector('eye_group-2'), {
+                x: transX / 6,
+                y: transY / 6,
+            });
+            gsap.to(classSelector('downlip'), {
+                x: transX / 3,
+                y: transY / 3 - 10,
+            });
+            gsap.to(idSelector('head'), {
+                x: transX / 2,
+                y: transY / 2,
+            });
+        };
+
+        window.addEventListener('mousemove', handleMousemove);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('mousemove', handleMousemove);
+        };
     }, []);
     return (
-        <div className={classnames(style.giraffe)}>
-            <svg
-                id="head"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 653.55 575.33"
-            >
+        <div className={classnames(style.giraffe, className)} onClick={waveEar}>
+            <svg id="head" viewBox="0 0 653.55 575.33">
                 <title>giraffe</title>
                 <path
                     id="corn"
@@ -99,6 +149,38 @@ const Giraffe: FC<KangarooProps> = () => {
                         id="teeth-3"
                         data-name="teeth"
                         d="M385.15,548.5s0,40-4,41-21,0-26,0,0-41,0-41Z"
+                        transform="translate(-22.8 -52.67)"
+                        fill="#fff"
+                        stroke="#f15a24"
+                        strokeMiterlimit="10"
+                        strokeWidth="5"
+                    />
+                </g>
+                <g id="tooth_group-2" data-name="tooth_group">
+                    <path
+                        id="teeth-4"
+                        data-name="teeth"
+                        d="M268,548s0,40,4,41,21,0,26,0,0-41,0-41Z"
+                        transform="translate(-22.8 -52.67)"
+                        fill="#fff"
+                        stroke="#f15a24"
+                        strokeMiterlimit="10"
+                        strokeWidth="5"
+                    />
+                    <path
+                        id="teeth-5"
+                        data-name="teeth"
+                        d="M290,548.5s0,40,4,41,21,0,26,0,0-41,0-41Z"
+                        transform="translate(-22.8 -52.67)"
+                        fill="#fff"
+                        stroke="#f15a24"
+                        strokeMiterlimit="10"
+                        strokeWidth="5"
+                    />
+                    <path
+                        id="teeth-6"
+                        data-name="teeth"
+                        d="M314,548.5s0,40,4,41,21,0,26,0,0-41,0-41Z"
                         transform="translate(-22.8 -52.67)"
                         fill="#fff"
                         stroke="#f15a24"
@@ -194,7 +276,7 @@ const Giraffe: FC<KangarooProps> = () => {
                     transform="translate(-22.8 -52.67)"
                     fill="#f15a24"
                 />
-                <g id="downlip">
+                <g id="downlip" className="downlip">
                     <path
                         id="background-2"
                         data-name="background"
@@ -211,6 +293,23 @@ const Giraffe: FC<KangarooProps> = () => {
                         fill="#f7931e"
                     />
                 </g>
+                <g id="downlip-2" data-name="downlip" className="downlip">
+                    <path
+                        id="background-4"
+                        data-name="background"
+                        d="M349.56,625.5H337.5s-47.91-.17-69-4c-22-4-30.32-11-28-25,2-12,10-12,17-8,5.2,3,79,2,79,2h13.06"
+                        transform="translate(-22.8 -52.67)"
+                        fill="#fbb03b"
+                        stroke="#f15a24"
+                        strokeMiterlimit="10"
+                        strokeWidth="5"
+                    />
+                    <path
+                        d="M289,621.25c.5-6.28,7.24-11.25,15.47-11.25,8.56,0,15.5,5.37,15.5,12q0,.36,0,.72s-12,.28-25-.72C290,621.62,289,621.25,289,621.25Z"
+                        transform="translate(-22.8 -52.67)"
+                        fill="#f7931e"
+                    />
+                </g>
                 <path
                     id="corn-2"
                     data-name="corn"
@@ -221,38 +320,7 @@ const Giraffe: FC<KangarooProps> = () => {
                     strokeMiterlimit="10"
                     strokeWidth="4"
                 />
-                <g id="tooth_group-2" data-name="tooth_group">
-                    <path
-                        id="teeth-4"
-                        data-name="teeth"
-                        d="M268,548s0,40,4,41,21,0,26,0,0-41,0-41Z"
-                        transform="translate(-22.8 -52.67)"
-                        fill="#fff"
-                        stroke="#f15a24"
-                        strokeMiterlimit="10"
-                        strokeWidth="5"
-                    />
-                    <path
-                        id="teeth-5"
-                        data-name="teeth"
-                        d="M290,548.5s0,40,4,41,21,0,26,0,0-41,0-41Z"
-                        transform="translate(-22.8 -52.67)"
-                        fill="#fff"
-                        stroke="#f15a24"
-                        strokeMiterlimit="10"
-                        strokeWidth="5"
-                    />
-                    <path
-                        id="teeth-6"
-                        data-name="teeth"
-                        d="M314,548.5s0,40,4,41,21,0,26,0,0-41,0-41Z"
-                        transform="translate(-22.8 -52.67)"
-                        fill="#fff"
-                        stroke="#f15a24"
-                        strokeMiterlimit="10"
-                        strokeWidth="5"
-                    />
-                </g>
+
                 <g id="ear_group-2" data-name="ear_group">
                     <path
                         id="ear_background-2"
@@ -348,24 +416,10 @@ const Giraffe: FC<KangarooProps> = () => {
                     transform="translate(-22.8 -52.67)"
                     fill="#f15a24"
                 />
-                <g id="downlip-2" data-name="downlip">
-                    <path
-                        id="background-4"
-                        data-name="background"
-                        d="M349.56,625.5H337.5s-47.91-.17-69-4c-22-4-30.32-11-28-25,2-12,10-12,17-8,5.2,3,79,2,79,2h13.06"
-                        transform="translate(-22.8 -52.67)"
-                        fill="#fbb03b"
-                        stroke="#f15a24"
-                        strokeMiterlimit="10"
-                        strokeWidth="5"
-                    />
-                    <path
-                        d="M289,621.25c.5-6.28,7.24-11.25,15.47-11.25,8.56,0,15.5,5.37,15.5,12q0,.36,0,.72s-12,.28-25-.72C290,621.62,289,621.25,289,621.25Z"
-                        transform="translate(-22.8 -52.67)"
-                        fill="#f7931e"
-                    />
-                </g>
             </svg>
+            <div className={classnames(style.neck)}>
+                <div className={classnames(style.neckContent)}>{children}</div>
+            </div>
         </div>
     );
 };

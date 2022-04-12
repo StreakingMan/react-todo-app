@@ -8,7 +8,9 @@ import {
     removeTodo,
 } from './utils/local-storge-operator';
 import { Delete } from '@mui/icons-material';
-import Giraffe from './characters/Giraffe';
+import Giraffe, { waveEar } from './components/characters/Giraffe';
+import TodoItem from './components/todo/TodoItem';
+import TodoList from './components/todo/TodoList';
 
 function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
@@ -27,25 +29,33 @@ function App() {
     };
 
     return (
-        <Box sx={{ maxWidth: 1280, margin: '0 auto' }}>
-            <Giraffe />
-            <Box sx={{ fontFamily: 'Monospace', fontSize: 50 }}>TODO LIST</Box>
-            <Input onChange={(e) => setTemp(e.target.value)} />
-            <Button onClick={onAddClick}>Add Todo</Button>
-            <List sx={{ width: 500 }}>
-                {todoList.map((todo) => (
-                    <ListItem
+        <Box className={'app'}>
+            <Giraffe className={'giraffe'}>
+                <Box className={'header'}>
+                    <Box
                         sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
+                            fontFamily: 'Monospace',
+                            fontSize: 50,
+                            fontWeight: 900,
                         }}
-                        key={todo.id}
                     >
-                        {todo.title}
-                        <Delete onClick={() => onDeleteClick(todo.id)} />
-                    </ListItem>
-                ))}
-            </List>
+                        TODO LIST
+                    </Box>
+                </Box>
+                <TodoList>
+                    {todoList.map((todo) => (
+                        <TodoItem
+                            title={todo.title}
+                            id={todo.id}
+                            key={todo.id}
+                            onDelete={onDeleteClick}
+                        />
+                    ))}
+                </TodoList>
+
+                <Input onChange={(e) => setTemp(e.target.value)} />
+                <Button onClick={onAddClick}>Add Todo</Button>
+            </Giraffe>
         </Box>
     );
 }
