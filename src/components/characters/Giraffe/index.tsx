@@ -85,8 +85,16 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
             ];
             if (transX > transBase) transX = transBase;
             if (transY > transBase) transY = transBase;
-            gsap.to(idSelector('inner'), { x: transX, y: transY });
-            gsap.to(idSelector('inner-2'), { x: transX, y: transY });
+            // 眼珠
+            gsap.to(idSelector('inner'), {
+                x: transX,
+                y: transY < -30 ? -30 : transY,
+            });
+            gsap.to(idSelector('inner-2'), {
+                x: transX,
+                y: transY < -30 ? -30 : transY,
+            });
+            // 眼圈
             gsap.to(idSelector('eye_group'), {
                 x: transX / 6,
                 y: transY / 6,
@@ -95,10 +103,12 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
                 x: transX / 6,
                 y: transY / 6,
             });
+            // 嘴唇
             gsap.to(classSelector('downlip'), {
                 x: transX / 3,
                 y: transY / 3 - 10,
             });
+            // 脑袋
             gsap.to(idSelector('head'), {
                 x: transX / 2,
                 y: transY / 2,
