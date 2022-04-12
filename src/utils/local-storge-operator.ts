@@ -1,4 +1,4 @@
-import { TODO } from './interface';
+import { TODO } from '../interface';
 
 export const addTodo = (todo: TODO) => {
     const storage = window.localStorage.getItem('todoList') || '[]';
