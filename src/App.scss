@@ -8,8 +8,6 @@ body {
 }
 
 .app {
-    max-width: 1280px;
-    margin: 0 auto;
     display: flex;
     min-height: 100vh;
     align-items: center;
@@ -19,12 +17,15 @@ body {
 }
 
 .header {
-    position: static;
+    position: sticky;
+    z-index: 2;
     top: 16px;
 }
 
 .giraffe {
-    //transform: translateX(200px);
+    position: relative;
+    z-index: 1;
+    transform: translateX(200px);
 }
 
 .beian {

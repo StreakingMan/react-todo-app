@@ -63,9 +63,10 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
         const eyeInner2 = document.getElementById('inner-2');
         const eyeOuter = document.getElementById('outer');
         if (!eyeInner1 || !eyeInner2 || !eyeOuter) return;
-        const { x: x1, y } = eyeInner1.getBoundingClientRect();
+        // eslint-disable-next-line prefer-const
+        let { x: x1, y } = eyeInner1.getBoundingClientRect();
         const { x: x2 } = eyeInner2.getBoundingClientRect();
-        const [eyeX, eyeY] = [(x1 + x2) / 2, y];
+        let [eyeX, eyeY] = [(x1 + x2) / 2, y];
         const [screenWidth, screenHeight] = [
             window.innerWidth,
             window.innerHeight,
@@ -117,9 +118,19 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
 
         window.addEventListener('mousemove', handleMousemove);
 
+        // 更新眼珠基准坐标
+        const resizeObserver = new ResizeObserver(() => {
+            x1 = eyeInner1.getBoundingClientRect().x;
+            eyeY = eyeInner1.getBoundingClientRect().y;
+            eyeX = (x1 + x2) / 2;
+        });
+        const neckEle = document.getElementById('neck');
+        neckEle && resizeObserver.observe(neckEle);
+
         return () => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMousemove);
+            neckEle && resizeObserver.unobserve(neckEle);
         };
     }, []);
     return (
@@ -426,7 +437,7 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
                     />
                 </g>
             </svg>
-            <div className={classnames(style.neck)}>
+            <div id="neck" className={classnames(style.neck)}>
                 <div className={classnames(style.neckContent)}>{children}</div>
             </div>
         </div>
