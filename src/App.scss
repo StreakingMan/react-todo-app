@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: flex-end;
     flex-direction: column;
+    color: #f15a24;
 }
 
 .header {
@@ -15,4 +16,13 @@
 
 .giraffe {
     transform: translateX(200px);
+}
+
+.beian {
+    position: fixed;
+    bottom: 8px;
+    right: 12px;
+    color: gray;
+    opacity: 0.8;
+    text-decoration: none;
 }
