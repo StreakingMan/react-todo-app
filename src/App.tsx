@@ -42,6 +42,8 @@ function App() {
                         TODO LIST
                     </Box>
                 </Box>
+                <Input onChange={(e) => setTemp(e.target.value)} />
+                <Button onClick={onAddClick}>Add Todo</Button>
                 <TodoList>
                     {todoList.map((todo) => (
                         <TodoItem
@@ -52,9 +54,6 @@ function App() {
                         />
                     ))}
                 </TodoList>
-
-                <Input onChange={(e) => setTemp(e.target.value)} />
-                <Button onClick={onAddClick}>Add Todo</Button>
             </Giraffe>
 
             <a

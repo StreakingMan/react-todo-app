@@ -7,4 +7,19 @@
     align-items: center;
     border: 2px solid #f15a24;
     background-color: white;
+
+    .close {
+        transition: 0.3s;
+        opacity: 0;
+        transform: translateX(100%) rotate(180deg);
+        transform-origin: center;
+        cursor: pointer;
+    }
+
+    &:hover {
+        .close {
+            opacity: 1;
+            transform: translateX(0) rotate(0);
+        }
+    }
 }

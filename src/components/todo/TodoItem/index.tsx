@@ -46,7 +46,7 @@ const TodoItem: FC<TodoItemProps> = ({ title, id, onDelete }) => {
             }}
         >
             {title}
-            <Close onClick={() => onDelete(id)} />
+            <Close className={style.close} onClick={() => onDelete(id)} />
         </div>
     );
 };
