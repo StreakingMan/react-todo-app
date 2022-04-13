@@ -115,6 +115,7 @@ function App() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <ToggleButtonGroup
+                            exclusive
                             sx={{ ml: 2 }}
                             size={'small'}
                             value={filterOptions}
