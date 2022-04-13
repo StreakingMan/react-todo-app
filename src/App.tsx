@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import {
     Box,
+    Button,
     TextField,
     ThemeProvider,
     ToggleButton,
@@ -11,6 +12,7 @@ import {
 import { TODO } from './interface';
 import {
     addTodo,
+    finishTodo,
     getTodoList,
     removeTodo,
 } from './utils/local-storge-operator';
@@ -19,35 +21,66 @@ import TodoItem from './components/todo/TodoItem';
 import TodoList from './components/todo/TodoList';
 import { myTheme } from './utils/theme';
 import {
-    AllInbox,
+    Add,
     Check,
-    Delete,
+    Close,
     GitHub,
+    HourglassTop,
     Search,
-    Star,
 } from '@mui/icons-material';
 
 function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
     const [temp, setTemp] = useState('');
-    const [filterOptions, setFilterOptions] = useState<string[]>([]);
+    const [search, setSearch] = useState('');
+    const [filterOptions, setFilterOptions] = useState<string[]>(['doing']);
     const onFilterOptionsChange = (
         event: React.MouseEvent<HTMLElement>,
         newFormats: string[]
     ) => {
-        console.log(newFormats);
         setFilterOptions(newFormats);
     };
+    useEffect(() => {
+        const list = getTodoList();
+        setTodoList(
+            list.filter((todo) => {
+                if (filterOptions.length) {
+                    return (
+                        filterOptions.includes(todo.state) &&
+                        todo.title.includes(search)
+                    );
+                } else {
+                    return todo.title.includes(search);
+                }
+            })
+        );
+    }, [search, filterOptions]);
     const onAddClick = () => {
+        if (!temp) return;
+        const id = new Date().getTime().toString();
         addTodo({
-            id: new Date().getTime().toString(),
+            id,
             title: temp,
-            desc: '',
+            state: 'doing',
+            type: 'once',
         });
+        setTodoList(getTodoList());
+        setTemp('');
+        setTimeout(() => {
+            const newTODOEle = document.getElementById(id);
+            newTODOEle?.scrollIntoView({ behavior: 'smooth' });
+        });
+    };
+    const onLogicDeleteClick = (id: TODO['id']) => {
+        removeTodo(id, true);
         setTodoList(getTodoList());
     };
     const onDeleteClick = (id: TODO['id']) => {
         removeTodo(id);
+        setTodoList(getTodoList());
+    };
+    const onFinishClick = (id: TODO['id']) => {
+        finishTodo(id);
         setTodoList(getTodoList());
     };
 
@@ -73,12 +106,13 @@ function App() {
                             />
                         </Typography>
                     </Box>
-                    <Box className={'operator'}>
+                    <Box className={'filter'}>
                         <Search sx={{ mr: 1, my: 0.5 }} />
                         <TextField
                             fullWidth
-                            placeholder="Search Something"
+                            placeholder="Search something"
                             variant="standard"
+                            onChange={(e) => setSearch(e.target.value)}
                         />
                         <ToggleButtonGroup
                             sx={{ ml: 2 }}
@@ -87,30 +121,45 @@ function App() {
                             onChange={onFilterOptionsChange}
                             aria-label="text formatting"
                         >
-                            <ToggleButton value="bold" aria-label="bold">
+                            <ToggleButton value="doing">
+                                <HourglassTop />
+                            </ToggleButton>
+                            <ToggleButton value="finished">
                                 <Check />
                             </ToggleButton>
-                            <ToggleButton value="italic" aria-label="italic">
-                                <Delete />
-                            </ToggleButton>
-                            <ToggleButton
-                                value="underlined"
-                                aria-label="underlined"
-                            >
-                                <AllInbox />
-                            </ToggleButton>
-                            <ToggleButton value="color" aria-label="color">
-                                <Star />
+                            <ToggleButton value="deleted">
+                                <Close />
                             </ToggleButton>
                         </ToggleButtonGroup>
                     </Box>
+                    <Box className={'operator'}>
+                        <TextField
+                            fullWidth
+                            placeholder="Create a new TODO!"
+                            variant="standard"
+                            multiline
+                            value={temp}
+                            onChange={(v) => setTemp(v.target.value)}
+                        />
+                        <Box sx={{ mt: 2 }}>
+                            <Button
+                                onClick={onAddClick}
+                                variant="contained"
+                                startIcon={<Add />}
+                            >
+                                Add
+                            </Button>
+                        </Box>
+                    </Box>
+
                     <TodoList>
                         {todoList.map((todo) => (
                             <TodoItem
-                                title={todo.title}
-                                id={todo.id}
+                                {...todo}
                                 key={todo.id}
                                 onDelete={onDeleteClick}
+                                onLogicDelete={onLogicDeleteClick}
+                                onFinish={onFinishClick}
                             />
                         ))}
                     </TodoList>

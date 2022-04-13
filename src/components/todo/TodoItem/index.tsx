@@ -2,7 +2,7 @@ import React, { FC, ReactEventHandler, useState } from 'react';
 import classnames from 'classnames';
 import style from './index.module.scss';
 import { TodoItemProps } from './interface';
-import { Check, Close } from '@mui/icons-material';
+import { Check, Close, Delete } from '@mui/icons-material';
 
 const initMatrix = [
     [1, 0, 0, 0],
@@ -11,7 +11,14 @@ const initMatrix = [
     [0, 0, 0, 1],
 ];
 
-const TodoItem: FC<TodoItemProps> = ({ title, id, onDelete }) => {
+const TodoItem: FC<TodoItemProps> = ({
+    title,
+    id,
+    state,
+    onDelete,
+    onLogicDelete,
+    onFinish,
+}) => {
     const [matrix, setMatrix] = useState(initMatrix);
     const [hasTransition, setHasTransition] = useState(true);
     const handleMouseMove: ReactEventHandler = (e) => {
@@ -37,9 +44,10 @@ const TodoItem: FC<TodoItemProps> = ({ title, id, onDelete }) => {
 
     return (
         <div
+            id={id}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className={classnames(style.todoItem)}
+            className={classnames(style.todoItem, style[state])}
             style={{
                 transform: `matrix3d(${matrix.toString()})`,
                 transition: hasTransition ? '0.3s' : undefined,
@@ -48,8 +56,23 @@ const TodoItem: FC<TodoItemProps> = ({ title, id, onDelete }) => {
             <div className={style.todoItemInner}>
                 {title}
                 <div className={'spacer'} />
-                <Close className={style.close} onClick={() => onDelete(id)} />
-                <Check className={style.check} />
+                {state === 'doing' ? (
+                    <Close
+                        className={style.close}
+                        onClick={() => onLogicDelete(id)}
+                    />
+                ) : (
+                    <Delete
+                        className={style.close}
+                        onClick={() => onDelete(id)}
+                    />
+                )}
+                {state === 'doing' && (
+                    <Check
+                        className={style.check}
+                        onClick={() => onFinish(id)}
+                    />
+                )}
             </div>
         </div>
     );

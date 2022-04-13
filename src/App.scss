@@ -27,7 +27,7 @@ body {
     }
 }
 
-.operator {
+@mixin blurPanel {
     background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
     padding: 16px 32px;
@@ -37,9 +37,18 @@ body {
     top: 16px;
     margin-bottom: 24px;
     border-radius: 32px;
+    box-shadow: 10px 10px 0 0 #f15a2488;
+}
+
+.filter {
+    @include blurPanel();
     display: flex;
     align-items: center;
-    box-shadow: 10px 10px 0 0 #f15a2488;
+}
+
+.operator {
+    @include blurPanel();
+    top: 92px;
 }
 
 .beian {
