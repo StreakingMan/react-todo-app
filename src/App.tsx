@@ -1,20 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.scss';
-import { Box, Button, Input, List, ListItem } from '@mui/material';
+import {
+    Box,
+    TextField,
+    ThemeProvider,
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography,
+} from '@mui/material';
 import { TODO } from './interface';
 import {
     addTodo,
     getTodoList,
     removeTodo,
 } from './utils/local-storge-operator';
-import { Delete } from '@mui/icons-material';
-import Giraffe, { waveEar } from './components/characters/Giraffe';
+import Giraffe from './components/characters/Giraffe';
 import TodoItem from './components/todo/TodoItem';
 import TodoList from './components/todo/TodoList';
+import { myTheme } from './utils/theme';
+import {
+    AllInbox,
+    Check,
+    Delete,
+    GitHub,
+    Search,
+    Star,
+} from '@mui/icons-material';
 
 function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
     const [temp, setTemp] = useState('');
+    const [filterOptions, setFilterOptions] = useState<string[]>([]);
+    const onFilterOptionsChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newFormats: string[]
+    ) => {
+        console.log(newFormats);
+        setFilterOptions(newFormats);
+    };
     const onAddClick = () => {
         addTodo({
             id: new Date().getTime().toString(),
@@ -29,42 +52,80 @@ function App() {
     };
 
     return (
-        <Box className={'app'}>
-            <Giraffe className={'giraffe'}>
-                <Box className={'header'}>
-                    <Box
-                        sx={{
-                            fontFamily: 'Monospace',
-                            fontSize: 50,
-                            fontWeight: 900,
-                        }}
-                    >
-                        TODO LIST
+        <ThemeProvider theme={myTheme}>
+            <Box className={'app'}>
+                <Giraffe className={'giraffe'}>
+                    <Box className={'info'}>
+                        <Typography
+                            fontWeight={700}
+                            variant="h3"
+                            component="h1"
+                        >
+                            TODO LIST
+                            <GitHub
+                                sx={{ ml: 2, cursor: 'pointer' }}
+                                onClick={() => {
+                                    window.open(
+                                        'https://github.com/StreakingMan/react-todo-app',
+                                        '_blank'
+                                    );
+                                }}
+                            />
+                        </Typography>
                     </Box>
-                </Box>
-                <Input onChange={(e) => setTemp(e.target.value)} />
-                <Button onClick={onAddClick}>Add Todo</Button>
-                <TodoList>
-                    {todoList.map((todo) => (
-                        <TodoItem
-                            title={todo.title}
-                            id={todo.id}
-                            key={todo.id}
-                            onDelete={onDeleteClick}
+                    <Box className={'operator'}>
+                        <Search sx={{ mr: 1, my: 0.5 }} />
+                        <TextField
+                            fullWidth
+                            placeholder="Search Something"
+                            variant="standard"
                         />
-                    ))}
-                </TodoList>
-            </Giraffe>
+                        <ToggleButtonGroup
+                            sx={{ ml: 2 }}
+                            size={'small'}
+                            value={filterOptions}
+                            onChange={onFilterOptionsChange}
+                            aria-label="text formatting"
+                        >
+                            <ToggleButton value="bold" aria-label="bold">
+                                <Check />
+                            </ToggleButton>
+                            <ToggleButton value="italic" aria-label="italic">
+                                <Delete />
+                            </ToggleButton>
+                            <ToggleButton
+                                value="underlined"
+                                aria-label="underlined"
+                            >
+                                <AllInbox />
+                            </ToggleButton>
+                            <ToggleButton value="color" aria-label="color">
+                                <Star />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+                    <TodoList>
+                        {todoList.map((todo) => (
+                            <TodoItem
+                                title={todo.title}
+                                id={todo.id}
+                                key={todo.id}
+                                onDelete={onDeleteClick}
+                            />
+                        ))}
+                    </TodoList>
+                </Giraffe>
 
-            <a
-                className={'beian'}
-                href="https://beian.miit.gov.cn/"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-            >
-                浙ICP备17007857号-2
-            </a>
-        </Box>
+                <a
+                    className={'beian'}
+                    href="https://beian.miit.gov.cn/"
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                >
+                    浙ICP备17007857号-2
+                </a>
+            </Box>
+        </ThemeProvider>
     );
 }
 

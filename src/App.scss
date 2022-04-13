@@ -1,31 +1,45 @@
 html,
 body {
-    overflow-y: overlay;
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
-    //display: none;
+    display: none;
 }
 
 .app {
     display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: flex-end;
-    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
     color: #f15a24;
 }
 
-.header {
+.info {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 32px;
+    border: 2px solid #f15a24;
+    margin-bottom: 24px;
+    box-shadow: 10px 10px 0 0 #f15a2488;
+    @media screen and (min-width: 768px) {
+        margin-top: -100px;
+        margin-right: 160px;
+    }
+}
+
+.operator {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 16px 32px;
+    border: 2px solid #f15a24;
     position: sticky;
     z-index: 2;
     top: 16px;
-}
-
-.giraffe {
-    position: relative;
-    z-index: 1;
-    transform: translateX(200px);
+    margin-bottom: 24px;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    box-shadow: 10px 10px 0 0 #f15a2488;
 }
 
 .beian {
@@ -35,4 +49,9 @@ body {
     color: gray;
     opacity: 0.8;
     text-decoration: none;
+    z-index: 2;
+}
+
+.spacer {
+    flex: 1 1 0;
 }

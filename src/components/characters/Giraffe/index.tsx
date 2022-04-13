@@ -135,6 +135,7 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
     }, []);
     return (
         <div className={classnames(style.giraffe, className)} onClick={waveEar}>
+            <div className={'spacer'} />
             <svg id="head" viewBox="0 0 653.55 575.33">
                 <title>giraffe</title>
                 <path
@@ -438,6 +439,7 @@ const Giraffe: FC<KangarooProps> = ({ className, children }) => {
                 </g>
             </svg>
             <div id="neck" className={classnames(style.neck)}>
+                <div className={style.neckRect} />
                 <div className={classnames(style.neckContent)}>{children}</div>
             </div>
         </div>

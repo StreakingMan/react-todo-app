@@ -8,7 +8,6 @@ const TodoList: FC<TodoListProps> = ({ children }) => {
     const listContainer = useRef(null);
     const [height, setHeight] = useState(0);
     useEffect(() => {
-        console.log('fuck');
         if (!listContainer.current) return;
         const collection = (listContainer.current as HTMLElement)
             .children as HTMLCollection;
@@ -20,7 +19,8 @@ const TodoList: FC<TodoListProps> = ({ children }) => {
                 (collection.item(i) as HTMLElement)?.offsetHeight + 24;
             i = i + 1;
         }
-        setHeight(totalHeight);
+        // last-child间距多24
+        setHeight(totalHeight + 24);
     }, [React.Children.count(children)]);
     return (
         <Box

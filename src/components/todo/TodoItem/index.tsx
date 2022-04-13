@@ -2,7 +2,7 @@ import React, { FC, ReactEventHandler, useState } from 'react';
 import classnames from 'classnames';
 import style from './index.module.scss';
 import { TodoItemProps } from './interface';
-import { Close } from '@mui/icons-material';
+import { Check, Close } from '@mui/icons-material';
 
 const initMatrix = [
     [1, 0, 0, 0],
@@ -45,8 +45,12 @@ const TodoItem: FC<TodoItemProps> = ({ title, id, onDelete }) => {
                 transition: hasTransition ? '0.3s' : undefined,
             }}
         >
-            {title}
-            <Close className={style.close} onClick={() => onDelete(id)} />
+            <div className={style.todoItemInner}>
+                {title}
+                <div className={'spacer'} />
+                <Close className={style.close} onClick={() => onDelete(id)} />
+                <Check className={style.check} />
+            </div>
         </div>
     );
 };
