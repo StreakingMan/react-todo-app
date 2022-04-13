@@ -33,10 +33,10 @@ function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
     const [temp, setTemp] = useState('');
     const [search, setSearch] = useState('');
-    const [filterOptions, setFilterOptions] = useState<string[]>(['doing']);
+    const [filterOptions, setFilterOptions] = useState<string>('doing');
     const onFilterOptionsChange = (
         event: React.MouseEvent<HTMLElement>,
-        newFormats: string[]
+        newFormats: string
     ) => {
         setFilterOptions(newFormats);
     };
@@ -44,9 +44,9 @@ function App() {
         const list = getTodoList();
         setTodoList(
             list.filter((todo) => {
-                if (filterOptions.length) {
+                if (filterOptions) {
                     return (
-                        filterOptions.includes(todo.state) &&
+                        filterOptions === todo.state &&
                         todo.title.includes(search)
                     );
                 } else {
