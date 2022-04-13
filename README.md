@@ -14,4 +14,6 @@ follow features developing...
 -   [ ] Desktop App
 -   [ ] Different todo item type
 -   [ ] Locales
+-   [ ] Scenes
+-   [ ] Dark (or more) Theme
 -   [ ] ...
