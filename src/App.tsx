@@ -29,14 +29,32 @@ import {
     Search,
 } from '@mui/icons-material';
 
+const todoTypeOption = [
+    {
+        value: 'doing',
+        title: '处理中',
+        ICON: HourglassTop,
+    },
+    {
+        value: 'finished',
+        title: '已完成',
+        ICON: Check,
+    },
+    {
+        value: 'deleted',
+        title: '回收站',
+        ICON: Close,
+    },
+];
+
 function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
     const [temp, setTemp] = useState('');
     const [search, setSearch] = useState('');
-    const [filterOptions, setFilterOptions] = useState<string>('doing');
+    const [filterOptions, setFilterOptions] = useState<string[]>(['doing']);
     const onFilterOptionsChange = (
         event: React.MouseEvent<HTMLElement>,
-        newFormats: string
+        newFormats: string[]
     ) => {
         setFilterOptions(newFormats);
     };
@@ -46,7 +64,7 @@ function App() {
             list.filter((todo) => {
                 if (filterOptions) {
                     return (
-                        filterOptions === todo.state &&
+                        filterOptions.includes(todo.state) &&
                         todo.title.includes(search)
                     );
                 } else {
@@ -115,22 +133,21 @@ function App() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <ToggleButtonGroup
-                            exclusive
                             sx={{ ml: 2 }}
                             size={'small'}
                             value={filterOptions}
                             onChange={onFilterOptionsChange}
                             aria-label="text formatting"
                         >
-                            <ToggleButton value="doing">
-                                <HourglassTop />
-                            </ToggleButton>
-                            <ToggleButton value="finished">
-                                <Check />
-                            </ToggleButton>
-                            <ToggleButton value="deleted">
-                                <Close />
-                            </ToggleButton>
+                            {todoTypeOption.map(({ value, title, ICON }) => (
+                                <ToggleButton
+                                    title={title}
+                                    key={value}
+                                    value={value}
+                                >
+                                    <ICON />
+                                </ToggleButton>
+                            ))}
                         </ToggleButtonGroup>
                     </Box>
                     <Box className={'operator'}>
