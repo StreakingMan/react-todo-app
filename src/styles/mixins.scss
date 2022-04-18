@@ -1,0 +1,12 @@
+@mixin blurPanel {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 16px 32px;
+    border: 2px solid #f15a24;
+    position: sticky;
+    z-index: 2;
+    top: 16px;
+    margin-bottom: 24px;
+    border-radius: 32px;
+    box-shadow: 10px 10px 0 0 #f15a2488;
+}

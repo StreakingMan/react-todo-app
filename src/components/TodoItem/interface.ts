@@ -1,4 +1,4 @@
-import { TODO } from '../../../interface';
+import { TODO } from '../../interface';
 
 export interface TodoItemProps extends TODO {
     className?: string;

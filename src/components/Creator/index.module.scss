@@ -1,0 +1,5 @@
+@import 'src/styles/mixins';
+.creator {
+    @include blurPanel();
+    top: 92px;
+}

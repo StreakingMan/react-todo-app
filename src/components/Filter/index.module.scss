@@ -1,0 +1,7 @@
+@import 'src/styles/mixins';
+
+.filter {
+    @include blurPanel();
+    display: flex;
+    align-items: center;
+}

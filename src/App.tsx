@@ -1,64 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
+import './styles/utils.scss';
+import { Box, ThemeProvider, Typography } from '@mui/material';
+import { TODO, TODOState } from './interface';
 import {
-    Box,
-    Button,
-    TextField,
-    ThemeProvider,
-    ToggleButton,
-    ToggleButtonGroup,
-    Typography,
-} from '@mui/material';
-import { TODO } from './interface';
-import {
-    addTodo,
     finishTodo,
     getTodoList,
     removeTodo,
 } from './utils/local-storge-operator';
 import Giraffe from './components/characters/Giraffe';
-import TodoItem from './components/todo/TodoItem';
-import TodoList from './components/todo/TodoList';
+import TodoItem from './components/TodoItem';
+import TodoList from './components/TodoList';
 import { myTheme } from './utils/theme';
-import {
-    Add,
-    Check,
-    Close,
-    GitHub,
-    HourglassTop,
-    Search,
-} from '@mui/icons-material';
-
-const todoTypeOption = [
-    {
-        value: 'doing',
-        title: '处理中',
-        ICON: HourglassTop,
-    },
-    {
-        value: 'finished',
-        title: '已完成',
-        ICON: Check,
-    },
-    {
-        value: 'deleted',
-        title: '回收站',
-        ICON: Close,
-    },
-];
+import { GitHub } from '@mui/icons-material';
+import Filter from './components/Filter';
+import { CreatorProps } from './components/Creator/interface';
+import Creator from './components/Creator';
+import Info from './components/Info';
 
 function App() {
     const [todoList, setTodoList] = useState<TODO[]>(getTodoList());
-    const [temp, setTemp] = useState('');
     const [search, setSearch] = useState('');
-    const [filterOptions, setFilterOptions] = useState<string[]>(['doing']);
-    const onFilterOptionsChange = (
-        event: React.MouseEvent<HTMLElement>,
-        newFormats: string[]
-    ) => {
-        setFilterOptions(newFormats);
-    };
-    useEffect(() => {
+    const [filterOptions, setFilterOptions] = useState<TODOState[]>(['doing']);
+
+    const refreshList = () => {
         const list = getTodoList();
         setTodoList(
             list.filter((todo) => {
@@ -72,103 +37,45 @@ function App() {
                 }
             })
         );
-    }, [search, filterOptions]);
-    const onAddClick = () => {
-        if (!temp) return;
-        const id = new Date().getTime().toString();
-        addTodo({
-            id,
-            title: temp,
-            state: 'doing',
-            type: 'once',
-        });
-        setTodoList(getTodoList());
-        setTemp('');
-        setTimeout(() => {
-            const newTODOEle = document.getElementById(id);
-            newTODOEle?.scrollIntoView({ behavior: 'smooth' });
-        });
     };
+
+    const onAdded: CreatorProps['onAdded'] = () => {
+        setSearch('');
+        setFilterOptions(['doing']);
+        refreshList();
+    };
+
     const onLogicDeleteClick = (id: TODO['id']) => {
         removeTodo(id, true);
-        setTodoList(getTodoList());
+        refreshList();
     };
     const onDeleteClick = (id: TODO['id']) => {
         removeTodo(id);
-        setTodoList(getTodoList());
+        refreshList();
     };
     const onFinishClick = (id: TODO['id']) => {
         finishTodo(id);
-        setTodoList(getTodoList());
+        refreshList();
     };
+
+    useEffect(() => {
+        refreshList();
+    }, [search, filterOptions]);
 
     return (
         <ThemeProvider theme={myTheme}>
             <Box className={'app'}>
                 <Giraffe className={'giraffe'}>
-                    <Box className={'info'}>
-                        <Typography
-                            fontWeight={700}
-                            variant="h3"
-                            component="h1"
-                        >
-                            TODO LIST
-                            <GitHub
-                                sx={{ ml: 2, cursor: 'pointer' }}
-                                onClick={() => {
-                                    window.open(
-                                        'https://github.com/StreakingMan/react-todo-app',
-                                        '_blank'
-                                    );
-                                }}
-                            />
-                        </Typography>
-                    </Box>
-                    <Box className={'filter'}>
-                        <Search sx={{ mr: 1, my: 0.5 }} />
-                        <TextField
-                            fullWidth
-                            placeholder="Search something"
-                            variant="standard"
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                        <ToggleButtonGroup
-                            sx={{ ml: 2 }}
-                            size={'small'}
-                            value={filterOptions}
-                            onChange={onFilterOptionsChange}
-                            aria-label="text formatting"
-                        >
-                            {todoTypeOption.map(({ value, title, ICON }) => (
-                                <ToggleButton
-                                    title={title}
-                                    key={value}
-                                    value={value}
-                                >
-                                    <ICON />
-                                </ToggleButton>
-                            ))}
-                        </ToggleButtonGroup>
-                    </Box>
-                    <Box className={'operator'}>
-                        <TextField
-                            fullWidth
-                            placeholder="Create a new TODO!"
-                            variant="standard"
-                            multiline
-                            value={temp}
-                            onChange={(v) => setTemp(v.target.value)}
-                        />
-                        <Box sx={{ mt: 2 }}>
-                            <Button
-                                onClick={onAddClick}
-                                variant="contained"
-                                startIcon={<Add />}
-                            >
-                                Add
-                            </Button>
-                        </Box>
-                    </Box>
+                    <Info />
+
+                    <Filter
+                        search={search}
+                        setSearch={setSearch}
+                        filterOptions={filterOptions}
+                        setFilterOptions={setFilterOptions}
+                    />
+
+                    <Creator onAdded={onAdded} />
 
                     <TodoList>
                         {todoList.map((todo) => (
