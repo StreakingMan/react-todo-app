@@ -1,6 +1,14 @@
+@font-face {
+    font-family: "smiley-sans";
+    font-style: normal;
+    font-display: swap;
+    src: url("./fonts/SmileySans-Oblique.ttf.woff2") format("woff2");
+}
+
 html,
 body {
     overflow-x: hidden;
+    font-family: 'smiley-sans', serif;
 }
 
 ::-webkit-scrollbar {
