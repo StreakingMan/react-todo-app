@@ -89,15 +89,6 @@ function App() {
                         ))}
                     </TodoList>
                 </Giraffe>
-
-                <a
-                    className={'beian'}
-                    href="https://beian.miit.gov.cn/"
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                >
-                    浙ICP备17007857号-2
-                </a>
             </Box>
         </ThemeProvider>
     );
